@@ -1,0 +1,23 @@
+[build]
+base = "server"
+command = "npm ci --prefix ../client && npx prisma generate --config prisma7.config.ts && npm run build --prefix ../client"
+publish = "../client/dist"
+functions = "netlify/functions"
+
+[build.environment]
+NODE_VERSION = "22"
+
+[functions]
+node_bundler = "esbuild"
+external_node_modules = ["express", "@prisma/adapter-pg", "pg"]
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/api/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
